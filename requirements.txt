@@ -1,0 +1,7 @@
+# SkyWing Airlines Management System
+# Standard Library Dependencies:
+# - tkinter (Included with Python)
+# - sqlite3 (Included with Python)
+# - math, random (Included with Python)
+#
+# Minimum Recommended Python Version: 3.8+
