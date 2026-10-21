@@ -1,10 +1,22 @@
 """
 SkyWing Modern Aviation Suite
 ==============================
-A high-end, modern desktop application for flight inquiry, schedule tracking,
+A high-end, cheerful light-mode desktop application for flight inquiry, schedule tracking,
 loyalty rewards, and airline management.
 
-Fixed Stable Dimensions (1020x680) - Pixel-perfect layout with zero clipping.
+Palette: Fresh & Cheerful Sky Aviation (Light Mode)
+  - Window Background:       #F0F5FA (Fresh Airy Cloud Blue)
+  - Card / Surface:          #FFFFFF (Pure White)
+  - Elevated / Inputs:       #EBF3FA (Soft Sky Accent Surface)
+  - Borders:                 #D0E0EE (Clean Slate Border)
+  - Primary Cheerful Sky:    #0284C7 (Vibrant Sky Blue)
+  - Sky Hover:               #0369A1 (Deeper Aviation Blue)
+  - Success:                 #10B981 (Fresh Emerald)
+  - Warning / Gold:          #F59E0B (Warm Sun Amber)
+  - Danger:                  #EF4444 (Bright Coral Red)
+  - Text Primary:            #0F172A (Deep Navy / High Contrast)
+  - Text Muted:              #64748B (Readable Cool Slate)
+  - Text White:              #FFFFFF (Pure White for Colored Buttons)
 """
 
 import math
@@ -13,18 +25,19 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from database import DatabaseManager
 
-# Design Tokens (Obsidian & Electric Sky)
-COLOR_BG = "#0B132B"          # Main Window Background
-COLOR_SURFACE = "#1C2541"     # Cards, Panels & Sidebar
-COLOR_SURFACE_ALT = "#243256" # Elevated Cards
-COLOR_BORDER = "#3A506B"      # Borders
-COLOR_ACCENT = "#48CAE4"      # Cyan Accent / Active Pills
-COLOR_ACCENT_HOVER = "#0096C7"
+# Design Tokens (Fresh Cheerful Aviation Light Palette)
+COLOR_BG = "#F0F5FA"          # Clean airy sky background
+COLOR_SURFACE = "#FFFFFF"     # White cards, panels & sidebar
+COLOR_SURFACE_ALT = "#EBF3FA" # Soft sky-tinted inputs & active pills
+COLOR_BORDER = "#D0E0EE"      # Clean soft border
+COLOR_ACCENT = "#0284C7"      # Cheerful vibrant Sky Blue
+COLOR_ACCENT_HOVER = "#0369A1"
 COLOR_SUCCESS = "#10B981"
 COLOR_WARNING = "#F59E0B"
 COLOR_DANGER = "#EF4444"
-COLOR_TEXT_LIGHT = "#FFFFFF"
-COLOR_TEXT_MUTED = "#94A3B8"
+COLOR_TEXT_MAIN = "#0F172A"   # Crisp readable dark navy
+COLOR_TEXT_MUTED = "#64748B"  # Muted subtitle slate
+COLOR_TEXT_WHITE = "#FFFFFF"  # White for primary buttons
 
 FONT_NAME = "Segoe UI"
 FONT_TITLE_HERO = (FONT_NAME, 18, "bold")
@@ -35,7 +48,7 @@ FONT_BODY_BOLD = (FONT_NAME, 10, "bold")
 
 
 class ModernAirlineApp(tk.Tk):
-    """Main Application Shell with fixed stable window size and pixel-perfect framing."""
+    """Main Application Shell with fixed stable window size and cheerful light styling."""
 
     WINDOW_WIDTH = 1020
     WINDOW_HEIGHT = 680
@@ -72,11 +85,11 @@ class ModernAirlineApp(tk.Tk):
         style = ttk.Style(self)
         style.theme_use("clam")
 
-        # Table Styles
+        # Cheerful Light Table Styles
         style.configure(
             "FlightBoard.Treeview",
             background=COLOR_SURFACE,
-            foreground=COLOR_TEXT_LIGHT,
+            foreground=COLOR_TEXT_MAIN,
             rowheight=32,
             font=(FONT_NAME, 10),
             fieldbackground=COLOR_SURFACE,
@@ -84,7 +97,7 @@ class ModernAirlineApp(tk.Tk):
         )
         style.configure(
             "FlightBoard.Treeview.Heading",
-            background="#121D38",
+            background="#E0EDF8",
             foreground=COLOR_ACCENT,
             font=(FONT_NAME, 10, "bold"),
             relief="flat",
@@ -100,7 +113,7 @@ class ModernAirlineApp(tk.Tk):
             "Custom.Vertical.TScrollbar",
             background=COLOR_SURFACE_ALT,
             troughcolor=COLOR_BG,
-            arrowcolor=COLOR_TEXT_LIGHT,
+            arrowcolor=COLOR_ACCENT,
             borderwidth=0
         )
 
@@ -119,10 +132,10 @@ class ModernAirlineApp(tk.Tk):
 
 
 # ==============================================================================
-# AUTHENTICATION VIEW (Modern Split Screen)
+# AUTHENTICATION VIEW (Modern Cheerful Split Screen)
 # ==============================================================================
 class AuthView(tk.Frame):
-    """High-contrast split-screen login and sign up."""
+    """Vibrant cheerful split-screen login and sign up."""
 
     def __init__(self, parent, controller: ModernAirlineApp):
         super().__init__(parent, bg=COLOR_BG)
@@ -132,26 +145,26 @@ class AuthView(tk.Frame):
         self._build_ui()
 
     def _build_ui(self):
-        # Left Visual Banner
-        left_banner = tk.Frame(self, bg=COLOR_SURFACE, width=380)
+        # Left Visual Banner (Bright Cheerful Aviation Blue)
+        left_banner = tk.Frame(self, bg=COLOR_ACCENT, width=380)
         left_banner.pack(side="left", fill="y")
         left_banner.pack_propagate(False)
 
-        badge = tk.Frame(left_banner, bg=COLOR_SURFACE_ALT, padx=12, pady=6)
+        badge = tk.Frame(left_banner, bg=COLOR_ACCENT_HOVER, padx=12, pady=6)
         badge.pack(anchor="w", padx=35, pady=(55, 20))
         tk.Label(
-            badge, text="ENTERPRISE AVIATION", font=(FONT_NAME, 9, "bold"),
-            bg=COLOR_SURFACE_ALT, fg=COLOR_ACCENT
+            badge, text="GLOBAL AVIATION PORTAL", font=(FONT_NAME, 9, "bold"),
+            bg=COLOR_ACCENT_HOVER, fg=COLOR_TEXT_WHITE
         ).pack()
 
         tk.Label(
-            left_banner, text="✈ SkyWing", font=(FONT_NAME, 26, "bold"),
-            bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT
+            left_banner, text="✈ SkyWing", font=(FONT_NAME, 28, "bold"),
+            bg=COLOR_ACCENT, fg=COLOR_TEXT_WHITE
         ).pack(anchor="w", padx=35)
 
         tk.Label(
-            left_banner, text="Airlines Global Suite", font=(FONT_NAME, 13),
-            bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED
+            left_banner, text="Airlines & Flight Operations", font=(FONT_NAME, 13),
+            bg=COLOR_ACCENT, fg="#E0F2FE"
         ).pack(anchor="w", padx=35, pady=(2, 25))
 
         desc = (
@@ -162,17 +175,17 @@ class AuthView(tk.Frame):
         )
         tk.Label(
             left_banner, text=desc, font=(FONT_NAME, 11),
-            bg=COLOR_SURFACE, fg="#B0C4DE", justify="left", anchor="w"
+            bg=COLOR_ACCENT, fg="#F0F9FF", justify="left", anchor="w"
         ).pack(anchor="w", padx=35, pady=(0, 40))
 
-        q_frame = tk.Frame(left_banner, bg="#131B33", padx=20, pady=15, highlightbackground=COLOR_BORDER, highlightthickness=1)
+        q_frame = tk.Frame(left_banner, bg="#0275B1", padx=20, pady=15, highlightbackground="#38BDF8", highlightthickness=1)
         q_frame.pack(side="bottom", fill="x", padx=30, pady=35)
         tk.Label(
             q_frame, text="“The sky has no limits, only horizons.”",
-            font=(FONT_NAME, 10, "italic"), bg="#131B33", fg=COLOR_ACCENT
+            font=(FONT_NAME, 10, "italic"), bg="#0275B1", fg=COLOR_TEXT_WHITE
         ).pack()
 
-        # Right Form Area
+        # Right Form Area (Crisp White Card on Soft Sky Backdrop)
         self.right_panel = tk.Frame(self, bg=COLOR_BG)
         self.right_panel.pack(side="right", fill="both", expand=True, padx=40, pady=40)
 
@@ -187,26 +200,26 @@ class AuthView(tk.Frame):
 
         if not self.is_register_mode:
             # Login
-            tk.Label(card, text="Welcome Back", font=FONT_TITLE_HERO, bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT).pack(anchor="w")
+            tk.Label(card, text="Welcome Back", font=FONT_TITLE_HERO, bg=COLOR_SURFACE, fg=COLOR_TEXT_MAIN).pack(anchor="w")
             tk.Label(card, text="Enter your flight ID and credentials to continue.", font=FONT_BODY, bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w", pady=(2, 25))
 
             tk.Label(card, text="USER ID", font=(FONT_NAME, 9, "bold"), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w")
             self.id_entry = tk.Entry(
-                card, font=(FONT_NAME, 11), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_LIGHT,
+                card, font=(FONT_NAME, 11), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_MAIN,
                 insertbackground=COLOR_ACCENT, relief="flat", highlightbackground=COLOR_BORDER, highlightthickness=1
             )
             self.id_entry.pack(fill="x", ipady=6, pady=(4, 15))
 
             tk.Label(card, text="PASSWORD", font=(FONT_NAME, 9, "bold"), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w")
             self.pwd_entry = tk.Entry(
-                card, font=(FONT_NAME, 11), show="*", bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_LIGHT,
+                card, font=(FONT_NAME, 11), show="*", bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_MAIN,
                 insertbackground=COLOR_ACCENT, relief="flat", highlightbackground=COLOR_BORDER, highlightthickness=1
             )
             self.pwd_entry.pack(fill="x", ipady=6, pady=(4, 25))
 
             btn = tk.Button(
                 card, text="AUTHENTICATE & ENTER →", font=(FONT_NAME, 11, "bold"),
-                bg=COLOR_ACCENT, fg=COLOR_BG, activebackground=COLOR_ACCENT_HOVER, activeforeground=COLOR_TEXT_LIGHT,
+                bg=COLOR_ACCENT, fg=COLOR_TEXT_WHITE, activebackground=COLOR_ACCENT_HOVER, activeforeground=COLOR_TEXT_WHITE,
                 relief="flat", cursor="hand2", command=self._handle_login
             )
             btn.pack(fill="x", ipady=8, pady=(0, 15))
@@ -222,33 +235,33 @@ class AuthView(tk.Frame):
 
         else:
             # Register
-            tk.Label(card, text="Create Account", font=FONT_TITLE_HERO, bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT).pack(anchor="w")
+            tk.Label(card, text="Create Account", font=FONT_TITLE_HERO, bg=COLOR_SURFACE, fg=COLOR_TEXT_MAIN).pack(anchor="w")
             tk.Label(card, text="Register as a traveler to access ticket portals.", font=FONT_BODY, bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w", pady=(2, 20))
 
             tk.Label(card, text="FULL NAME", font=(FONT_NAME, 9, "bold"), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w")
             self.reg_name = tk.Entry(
-                card, font=(FONT_NAME, 11), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_LIGHT,
+                card, font=(FONT_NAME, 11), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_MAIN,
                 insertbackground=COLOR_ACCENT, relief="flat", highlightbackground=COLOR_BORDER, highlightthickness=1
             )
             self.reg_name.pack(fill="x", ipady=5, pady=(3, 12))
 
             tk.Label(card, text="USER ID (NUMBERS)", font=(FONT_NAME, 9, "bold"), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w")
             self.reg_id = tk.Entry(
-                card, font=(FONT_NAME, 11), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_LIGHT,
+                card, font=(FONT_NAME, 11), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_MAIN,
                 insertbackground=COLOR_ACCENT, relief="flat", highlightbackground=COLOR_BORDER, highlightthickness=1
             )
             self.reg_id.pack(fill="x", ipady=5, pady=(3, 12))
 
             tk.Label(card, text="PASSWORD", font=(FONT_NAME, 9, "bold"), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w")
             self.reg_pwd = tk.Entry(
-                card, font=(FONT_NAME, 11), show="*", bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_LIGHT,
+                card, font=(FONT_NAME, 11), show="*", bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_MAIN,
                 insertbackground=COLOR_ACCENT, relief="flat", highlightbackground=COLOR_BORDER, highlightthickness=1
             )
             self.reg_pwd.pack(fill="x", ipady=5, pady=(3, 20))
 
             btn = tk.Button(
                 card, text="CREATE ACCOUNT", font=(FONT_NAME, 11, "bold"),
-                bg=COLOR_SUCCESS, fg=COLOR_TEXT_LIGHT, activebackground="#059669",
+                bg=COLOR_SUCCESS, fg=COLOR_TEXT_WHITE, activebackground="#059669",
                 relief="flat", cursor="hand2", command=self._handle_register
             )
             btn.pack(fill="x", ipady=8, pady=(0, 12))
@@ -297,10 +310,10 @@ class AuthView(tk.Frame):
 
 
 # ==============================================================================
-# MAIN WORKSPACE (Single-Window Sidebar Console)
+# MAIN WORKSPACE (Cheerful White Sidebar & Clean Sky Console)
 # ==============================================================================
 class MainWorkspace(tk.Frame):
-    """Full-featured modern desktop dashboard with fixed stable frames."""
+    """Full-featured modern desktop dashboard with cheerful light styling."""
 
     def __init__(self, parent, controller: ModernAirlineApp):
         super().__init__(parent, bg=COLOR_BG)
@@ -313,7 +326,7 @@ class MainWorkspace(tk.Frame):
         self.switch_tab("flights")
 
     def _build_sidebar(self):
-        self.sidebar = tk.Frame(self, bg=COLOR_SURFACE, width=220)
+        self.sidebar = tk.Frame(self, bg=COLOR_SURFACE, width=220, highlightbackground=COLOR_BORDER, highlightthickness=1)
         self.sidebar.pack(side="left", fill="y")
         self.sidebar.pack_propagate(False)
 
@@ -321,13 +334,13 @@ class MainWorkspace(tk.Frame):
         brand_frame.pack(fill="x")
 
         tk.Label(
-            brand_frame, text="✈ SkyWing", font=(FONT_NAME, 16, "bold"),
-            bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT
+            brand_frame, text="✈ SkyWing", font=(FONT_NAME, 17, "bold"),
+            bg=COLOR_SURFACE, fg=COLOR_ACCENT
         ).pack(anchor="w")
 
         tk.Label(
-            brand_frame, text="Aviation Console", font=(FONT_NAME, 9),
-            bg=COLOR_SURFACE, fg=COLOR_ACCENT
+            brand_frame, text="Aviation Operations", font=(FONT_NAME, 9),
+            bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED
         ).pack(anchor="w")
 
         self.nav_frame = tk.Frame(self.sidebar, bg=COLOR_SURFACE, pady=10)
@@ -344,39 +357,39 @@ class MainWorkspace(tk.Frame):
             btn = tk.Button(
                 self.nav_frame, text=label, font=(FONT_NAME, 11),
                 bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED, activebackground=COLOR_SURFACE_ALT,
-                activeforeground=COLOR_TEXT_LIGHT, relief="flat", anchor="w",
+                activeforeground=COLOR_ACCENT, relief="flat", anchor="w",
                 padx=20, pady=11, cursor="hand2",
                 command=lambda tid=tab_id: self.switch_tab(tid)
             )
             btn.pack(fill="x", pady=2)
             self.nav_buttons[tab_id] = btn
 
-        # Bottom Profile
-        bottom_profile = tk.Frame(self.sidebar, bg="#131B33", padx=15, pady=15)
-        bottom_profile.pack(side="bottom", fill="x")
+        # Bottom Profile (Light Sky Pill)
+        bottom_profile = tk.Frame(self.sidebar, bg=COLOR_SURFACE_ALT, padx=15, pady=15, highlightbackground=COLOR_BORDER, highlightthickness=1)
+        bottom_profile.pack(side="bottom", fill="x", padx=10, pady=10)
 
         tk.Label(
             bottom_profile, text=f"👤 {self.controller.current_user}",
-            font=(FONT_NAME, 10, "bold"), bg="#131B33", fg=COLOR_TEXT_LIGHT, anchor="w"
+            font=(FONT_NAME, 10, "bold"), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_MAIN, anchor="w"
         ).pack(fill="x")
 
         role_text = "Admin Mode 🔓" if self.controller.is_admin else "Traveler Access"
         self.role_lbl = tk.Label(
             bottom_profile, text=role_text, font=(FONT_NAME, 9),
-            bg="#131B33", fg=COLOR_ACCENT if self.controller.is_admin else COLOR_TEXT_MUTED, anchor="w"
+            bg=COLOR_SURFACE_ALT, fg=COLOR_ACCENT if self.controller.is_admin else COLOR_TEXT_MUTED, anchor="w"
         )
         self.role_lbl.pack(fill="x", pady=(2, 8))
 
         logout_btn = tk.Button(
             bottom_profile, text="Sign Out", font=(FONT_NAME, 9, "bold"),
-            bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_MUTED, activebackground=COLOR_DANGER,
-            activeforeground=COLOR_TEXT_LIGHT, relief="flat", cursor="hand2",
+            bg=COLOR_SURFACE, fg=COLOR_DANGER, activebackground=COLOR_DANGER,
+            activeforeground=COLOR_TEXT_WHITE, relief="flat", cursor="hand2",
+            highlightbackground=COLOR_BORDER, highlightthickness=1,
             command=self.controller.show_auth_view
         )
         logout_btn.pack(fill="x", ipady=3)
 
     def _build_content_area(self):
-        # 800px width content area
         self.main_content = tk.Frame(self, bg=COLOR_BG, padx=25, pady=20)
         self.main_content.pack(side="right", fill="both", expand=True)
 
@@ -405,7 +418,7 @@ class MainWorkspace(tk.Frame):
 
 
 # ==============================================================================
-# TAB 1: FLIGHT BOARD & ADMIN CONTROL PANEL (Fixed Fit Layout)
+# TAB 1: FLIGHT BOARD & ADMIN CONTROL PANEL (Cheerful Light Theme)
 # ==============================================================================
 class FlightBoardPanel(tk.Frame):
     """Live Flight Schedule Table with integrated Admin toggle and Search."""
@@ -421,7 +434,7 @@ class FlightBoardPanel(tk.Frame):
         self.load_data()
 
     def _build_ui(self):
-        # Top Header Bar (Height ~45px)
+        # Top Header Bar
         header = tk.Frame(self, bg=COLOR_BG)
         header.pack(fill="x", pady=(0, 10))
 
@@ -430,7 +443,7 @@ class FlightBoardPanel(tk.Frame):
 
         tk.Label(
             title_box, text="Live Flight Board", font=FONT_TITLE_HERO,
-            bg=COLOR_BG, fg=COLOR_TEXT_LIGHT
+            bg=COLOR_BG, fg=COLOR_TEXT_MAIN
         ).pack(anchor="w")
 
         tk.Label(
@@ -442,14 +455,15 @@ class FlightBoardPanel(tk.Frame):
             header,
             text="🔓 Admin Controls" if self.controller.is_admin else "🔒 Unlock Admin",
             font=(FONT_NAME, 9, "bold"),
-            bg=COLOR_ACCENT if self.controller.is_admin else COLOR_SURFACE_ALT,
-            fg=COLOR_BG if self.controller.is_admin else COLOR_TEXT_LIGHT,
+            bg=COLOR_ACCENT if self.controller.is_admin else COLOR_SURFACE,
+            fg=COLOR_TEXT_WHITE if self.controller.is_admin else COLOR_TEXT_MAIN,
             relief="flat", cursor="hand2", padx=10, pady=5,
+            highlightbackground=COLOR_BORDER, highlightthickness=1,
             command=self._toggle_admin_dialog
         )
         self.admin_btn.pack(side="right")
 
-        # Search Bar + Quick Stats (Height ~38px)
+        # Search Bar + Quick Stats
         filter_bar = tk.Frame(self, bg=COLOR_SURFACE, padx=12, pady=7, highlightbackground=COLOR_BORDER, highlightthickness=1)
         filter_bar.pack(fill="x", pady=(0, 10))
 
@@ -458,7 +472,7 @@ class FlightBoardPanel(tk.Frame):
         self.search_var.trace_add("write", lambda *a: self._filter_table())
         search_ent = tk.Entry(
             filter_bar, textvariable=self.search_var, font=(FONT_NAME, 10),
-            bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_LIGHT, insertbackground=COLOR_ACCENT,
+            bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_MAIN, insertbackground=COLOR_ACCENT,
             relief="flat", highlightbackground=COLOR_BORDER, highlightthickness=1, width=28
         )
         search_ent.pack(side="left", ipady=3)
@@ -469,7 +483,7 @@ class FlightBoardPanel(tk.Frame):
         )
         self.count_badge.pack(side="right")
 
-        # Table Container: Explicit height=8 rows to leave ample space for admin panel!
+        # Table Container
         self.table_frame = tk.Frame(self, bg=COLOR_SURFACE, highlightbackground=COLOR_BORDER, highlightthickness=1)
         self.table_frame.pack(fill="x", pady=(0, 10))
 
@@ -477,7 +491,7 @@ class FlightBoardPanel(tk.Frame):
         self.tree = ttk.Treeview(
             self.table_frame, columns=columns, show="headings",
             style="FlightBoard.Treeview", selectmode="browse",
-            height=7  # Perfectly sized to fit on screen without pushing anything off
+            height=7
         )
 
         col_widths = {"ID": 50, "Destination": 150, "The Date": 110, "Time": 100, "Flight Number": 120, "Status": 110}
@@ -491,7 +505,7 @@ class FlightBoardPanel(tk.Frame):
         self.tree.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
-        # Admin Control Panel (Fits directly below table with zero cutoff!)
+        # Admin Control Panel
         self.admin_panel = tk.Frame(self, bg=COLOR_SURFACE, padx=15, pady=10, highlightbackground=COLOR_BORDER, highlightthickness=1)
         if self.controller.is_admin:
             self._render_admin_panel()
@@ -510,15 +524,13 @@ class FlightBoardPanel(tk.Frame):
             font=(FONT_NAME, 9, "bold"), bg=COLOR_SURFACE, fg=COLOR_ACCENT
         ).pack(side="left")
 
-        # Delete Selected Button on Top Right of Admin Card
         del_btn = tk.Button(
             top_row, text="🗑 DELETE SELECTED FLIGHT", font=(FONT_NAME, 9, "bold"),
-            bg=COLOR_DANGER, fg=COLOR_TEXT_LIGHT, relief="flat", cursor="hand2", padx=8, pady=2,
+            bg=COLOR_DANGER, fg=COLOR_TEXT_WHITE, relief="flat", cursor="hand2", padx=8, pady=2,
             command=self._delete_selected_flight
         )
         del_btn.pack(side="right")
 
-        # Input Row
         form_row = tk.Frame(self.admin_panel, bg=COLOR_SURFACE)
         form_row.pack(fill="x")
 
@@ -530,19 +542,18 @@ class FlightBoardPanel(tk.Frame):
 
             tk.Label(box, text=text, font=(FONT_NAME, 8, "bold"), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w")
             ent = tk.Entry(
-                box, font=(FONT_NAME, 10), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_LIGHT,
+                box, font=(FONT_NAME, 10), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_MAIN,
                 insertbackground=COLOR_ACCENT, relief="flat", highlightbackground=COLOR_BORDER, highlightthickness=1
             )
             ent.pack(fill="x", ipady=3, pady=(2, 0))
             self.admin_entries[text] = ent
 
-        # Add Button
         add_box = tk.Frame(form_row, bg=COLOR_SURFACE)
         add_box.pack(side="left", padx=(6, 0))
         tk.Label(add_box, text=" ", font=(FONT_NAME, 8), bg=COLOR_SURFACE).pack()
         add_btn = tk.Button(
             add_box, text="+ ADD FLIGHT", font=(FONT_NAME, 10, "bold"),
-            bg=COLOR_SUCCESS, fg=COLOR_TEXT_LIGHT, relief="flat", cursor="hand2", padx=12, pady=4,
+            bg=COLOR_SUCCESS, fg=COLOR_TEXT_WHITE, relief="flat", cursor="hand2", padx=12, pady=4,
             command=self._add_flight_record
         )
         add_btn.pack()
@@ -550,7 +561,7 @@ class FlightBoardPanel(tk.Frame):
     def _toggle_admin_dialog(self):
         if self.controller.is_admin:
             self.controller.is_admin = False
-            self.admin_btn.config(text="🔒 Unlock Admin", bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_LIGHT)
+            self.admin_btn.config(text="🔒 Unlock Admin", bg=COLOR_SURFACE, fg=COLOR_TEXT_MAIN)
             self.admin_panel.pack_forget()
             self.workspace.refresh_role_label()
             messagebox.showinfo("Admin", "Logged out of Admin mode.")
@@ -567,9 +578,9 @@ class FlightBoardPanel(tk.Frame):
         card = tk.Frame(win, bg=COLOR_SURFACE, padx=20, pady=20, highlightbackground=COLOR_BORDER, highlightthickness=1)
         card.pack(fill="both", expand=True, padx=15, pady=15)
 
-        tk.Label(card, text="Enter Admin Security PIN", font=(FONT_NAME, 10, "bold"), bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT).pack(pady=(0, 8))
+        tk.Label(card, text="Enter Admin Security PIN", font=(FONT_NAME, 10, "bold"), bg=COLOR_SURFACE, fg=COLOR_TEXT_MAIN).pack(pady=(0, 8))
         pwd_in = tk.Entry(
-            card, show="*", font=(FONT_NAME, 12), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_LIGHT,
+            card, show="*", font=(FONT_NAME, 12), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_MAIN,
             insertbackground=COLOR_ACCENT, relief="flat", highlightbackground=COLOR_BORDER, highlightthickness=1, justify="center"
         )
         pwd_in.pack(fill="x", ipady=4, pady=(0, 12))
@@ -578,7 +589,7 @@ class FlightBoardPanel(tk.Frame):
         def submit():
             if pwd_in.get().strip() == self.ADMIN_PASSWORD:
                 self.controller.is_admin = True
-                self.admin_btn.config(text="🔓 Admin Controls", bg=COLOR_ACCENT, fg=COLOR_BG)
+                self.admin_btn.config(text="🔓 Admin Controls", bg=COLOR_ACCENT, fg=COLOR_TEXT_WHITE)
                 self._render_admin_panel()
                 self.workspace.refresh_role_label()
                 win.destroy()
@@ -587,7 +598,7 @@ class FlightBoardPanel(tk.Frame):
                 messagebox.showerror("Access Denied", "Incorrect Admin Password.")
                 pwd_in.delete(0, tk.END)
 
-        tk.Button(card, text="Verify PIN", font=(FONT_NAME, 10, "bold"), bg=COLOR_ACCENT, fg=COLOR_BG, relief="flat", cursor="hand2", command=submit).pack(fill="x", ipady=4)
+        tk.Button(card, text="Verify PIN", font=(FONT_NAME, 10, "bold"), bg=COLOR_ACCENT, fg=COLOR_TEXT_WHITE, relief="flat", cursor="hand2", command=submit).pack(fill="x", ipady=4)
         pwd_in.bind("<Return>", lambda e: submit())
 
     def load_data(self):
@@ -651,7 +662,7 @@ class FlightBoardPanel(tk.Frame):
 
 
 # ==============================================================================
-# TAB 2: TICKET FARE ESTIMATOR (المكان والوجهة + درجة السفر)
+# TAB 2: TICKET FARE ESTIMATOR (Cheerful Light Theme)
 # ==============================================================================
 class TicketPricingPanel(tk.Frame):
     """
@@ -711,13 +722,13 @@ class TicketPricingPanel(tk.Frame):
 
     def _build_ui(self):
         # Header
-        tk.Label(self, text="Flight Ticket Fare Estimator", font=FONT_TITLE_HERO, bg=COLOR_BG, fg=COLOR_TEXT_LIGHT).pack(anchor="w")
+        tk.Label(self, text="Flight Ticket Fare Estimator", font=FONT_TITLE_HERO, bg=COLOR_BG, fg=COLOR_TEXT_MAIN).pack(anchor="w")
         tk.Label(self, text="حدد مكان الانطلاق والوجهة المطلوبة لحساب متوسط سعر التذكرة فورياً.", font=FONT_BODY, bg=COLOR_BG, fg=COLOR_TEXT_MUTED).pack(anchor="w", pady=(2, 12))
 
         container = tk.Frame(self, bg=COLOR_BG)
         container.pack(fill="both", expand=True)
 
-        # Left Parameters Card (المكان والوجهة والدرجة)
+        # Left Parameters Card
         card = tk.Frame(container, bg=COLOR_SURFACE, padx=22, pady=18, highlightbackground=COLOR_BORDER, highlightthickness=1)
         card.pack(side="left", fill="both", expand=True, padx=(0, 10))
 
@@ -728,11 +739,11 @@ class TicketPricingPanel(tk.Frame):
         self.origin_var = tk.StringVar(value="Cairo (CAI)")
         origin_drop = tk.OptionMenu(card, self.origin_var, *self.AIRPORTS, command=lambda e: self._calculate())
         origin_drop.configure(
-            font=(FONT_NAME, 10), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_LIGHT,
+            font=(FONT_NAME, 10), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_MAIN,
             activebackground=COLOR_SURFACE, activeforeground=COLOR_ACCENT,
             relief="flat", highlightthickness=1, highlightbackground=COLOR_BORDER
         )
-        origin_drop["menu"].config(bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT, font=(FONT_NAME, 10))
+        origin_drop["menu"].config(bg=COLOR_SURFACE, fg=COLOR_TEXT_MAIN, font=(FONT_NAME, 10))
         origin_drop.pack(fill="x", ipady=3, pady=(2, 8))
 
         # 2. الوجهة / الوصول (To)
@@ -740,30 +751,30 @@ class TicketPricingPanel(tk.Frame):
         self.dest_var = tk.StringVar(value="Paris (CDG)")
         dest_drop = tk.OptionMenu(card, self.dest_var, *self.AIRPORTS, command=lambda e: self._calculate())
         dest_drop.configure(
-            font=(FONT_NAME, 10), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_LIGHT,
+            font=(FONT_NAME, 10), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_MAIN,
             activebackground=COLOR_SURFACE, activeforeground=COLOR_ACCENT,
             relief="flat", highlightthickness=1, highlightbackground=COLOR_BORDER
         )
-        dest_drop["menu"].config(bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT, font=(FONT_NAME, 10))
+        dest_drop["menu"].config(bg=COLOR_SURFACE, fg=COLOR_TEXT_MAIN, font=(FONT_NAME, 10))
         dest_drop.pack(fill="x", ipady=3, pady=(2, 8))
 
-        # 3. نوع الرحلة (ذهاب فقط / ذهاب وعودة)
+        # 3. نوع الرحلة
         tk.Label(card, text="3. نوع التذكرة", font=(FONT_NAME, 9, "bold"), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w")
         trip_type_frame = tk.Frame(card, bg=COLOR_SURFACE)
         trip_type_frame.pack(fill="x", pady=(2, 8))
         self.trip_type = tk.StringVar(value="one_way")
         tk.Radiobutton(
             trip_type_frame, text="ذهاب فقط (One Way)", variable=self.trip_type, value="one_way",
-            font=(FONT_NAME, 9), bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT, selectcolor=COLOR_SURFACE_ALT,
+            font=(FONT_NAME, 9), bg=COLOR_SURFACE, fg=COLOR_TEXT_MAIN, selectcolor=COLOR_SURFACE_ALT,
             activebackground=COLOR_SURFACE, activeforeground=COLOR_ACCENT, command=self._calculate
         ).pack(side="left", padx=(0, 15))
         tk.Radiobutton(
             trip_type_frame, text="ذهاب وعودة (Round Trip)", variable=self.trip_type, value="round_trip",
-            font=(FONT_NAME, 9), bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT, selectcolor=COLOR_SURFACE_ALT,
+            font=(FONT_NAME, 9), bg=COLOR_SURFACE, fg=COLOR_TEXT_MAIN, selectcolor=COLOR_SURFACE_ALT,
             activebackground=COLOR_SURFACE, activeforeground=COLOR_ACCENT, command=self._calculate
         ).pack(side="left")
 
-        # 4. درجة السفر (Class)
+        # 4. درجة السفر
         tk.Label(card, text="4. درجة السفر (Cabin Class)", font=(FONT_NAME, 9, "bold"), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w")
         class_frame = tk.Frame(card, bg=COLOR_SURFACE)
         class_frame.pack(fill="x", pady=(2, 0))
@@ -772,19 +783,18 @@ class TicketPricingPanel(tk.Frame):
         for title, val in classes:
             rb = tk.Radiobutton(
                 class_frame, text=title, variable=self.class_var, value=val,
-                font=(FONT_NAME, 9), bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT,
+                font=(FONT_NAME, 9), bg=COLOR_SURFACE, fg=COLOR_TEXT_MAIN,
                 selectcolor=COLOR_SURFACE_ALT, activebackground=COLOR_SURFACE,
                 activeforeground=COLOR_ACCENT, command=self._calculate
             )
             rb.pack(anchor="w", pady=1)
 
-        # Right Summary Card (تفاصيل التذكرة والسعر)
+        # Right Summary Card
         self.summary_card = tk.Frame(container, bg=COLOR_SURFACE, padx=22, pady=18, highlightbackground=COLOR_BORDER, highlightthickness=1)
         self.summary_card.pack(side="right", fill="both", expand=True, padx=(10, 0))
 
         tk.Label(self.summary_card, text="تفاصيل وحساب التذكرة", font=(FONT_NAME, 10, "bold"), bg=COLOR_SURFACE, fg=COLOR_ACCENT).pack(anchor="w")
 
-        # Route Badge
         self.route_badge = tk.Label(
             self.summary_card, text="Cairo (CAI) ➔ Paris (CDG)", font=(FONT_NAME, 11, "bold"),
             bg=COLOR_SURFACE_ALT, fg=COLOR_ACCENT, padx=10, pady=5
@@ -801,7 +811,7 @@ class TicketPricingPanel(tk.Frame):
 
         self.price_display = tk.Label(
             self.summary_card, text="0 EGP", font=(FONT_NAME, 24, "bold"),
-            bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT
+            bg=COLOR_SURFACE, fg=COLOR_TEXT_MAIN
         )
         self.price_display.pack(anchor="w", pady=(2, 2))
 
@@ -864,15 +874,15 @@ class TicketPricingPanel(tk.Frame):
         self.usd_display.config(text=f"~${usd_price:,.0f} USD (حسب سعر الصرف التقريبي)")
 
 
-
 # ==============================================================================
-# TAB 3: PROMOTIONAL LUCKY WHEEL (Fixed Fit & Clear Winning Banner)
+# TAB 3: PROMOTIONAL LUCKY WHEEL (Cheerful Light Theme)
 # ==============================================================================
 class LuckyWheelPanel(tk.Frame):
-    """Sleek Promotional Wheel of Fortune with visible prize display."""
+    """Sleek Promotional Wheel of Fortune with cheerful light styling."""
 
     OFFERS = ["10% DISCOUNT", "20% DISCOUNT", "30% DISCOUNT", "50% MEGA SALE", "40% DISCOUNT", "BETTER LUCK!"]
-    SEGMENT_COLORS = ["#0077B6", "#023E8A", "#0096C7", "#03045E", "#48CAE4", "#1E293B"]
+    # Cheerful Sky & Aviation Segment Palette
+    SEGMENT_COLORS = ["#0284C7", "#38BDF8", "#0284C7", "#38BDF8", "#0284C7", "#94A3B8"]
 
     def __init__(self, parent, workspace: MainWorkspace):
         super().__init__(parent, bg=COLOR_BG)
@@ -887,18 +897,18 @@ class LuckyWheelPanel(tk.Frame):
         self.draw_wheel()
 
     def _build_ui(self):
-        # Header (Height ~40px)
-        tk.Label(self, text="Promotional Wheel of Fortune", font=FONT_TITLE_HERO, bg=COLOR_BG, fg=COLOR_TEXT_LIGHT).pack(anchor="w")
+        # Header
+        tk.Label(self, text="Promotional Wheel of Fortune", font=FONT_TITLE_HERO, bg=COLOR_BG, fg=COLOR_TEXT_MAIN).pack(anchor="w")
         tk.Label(self, text="Spin daily to win exclusive flight vouchers and seat upgrade discounts.", font=FONT_BODY, bg=COLOR_BG, fg=COLOR_TEXT_MUTED).pack(anchor="w", pady=(2, 10))
 
         content = tk.Frame(self, bg=COLOR_BG)
         content.pack(fill="both", expand=True)
 
-        # Left Canvas: Perfectly sized 360x360 so everything fits with zero overflow!
+        # Left Canvas
         self.canvas = tk.Canvas(content, width=370, height=370, bg=COLOR_BG, highlightthickness=0)
         self.canvas.pack(side="left", padx=(0, 20))
 
-        # Right Controls & Prize Board (Explicitly sized, clear result card)
+        # Right Controls & Prize Board
         right_box = tk.Frame(content, bg=COLOR_SURFACE, padx=25, pady=20, highlightbackground=COLOR_BORDER, highlightthickness=1)
         right_box.pack(side="right", fill="both", expand=True)
 
@@ -906,7 +916,7 @@ class LuckyWheelPanel(tk.Frame):
 
         self.spin_btn = tk.Button(
             right_box, text="🎡 SPIN THE WHEEL", font=(FONT_NAME, 12, "bold"),
-            bg=COLOR_ACCENT, fg=COLOR_BG, activebackground=COLOR_ACCENT_HOVER, activeforeground=COLOR_TEXT_LIGHT,
+            bg=COLOR_ACCENT, fg=COLOR_TEXT_WHITE, activebackground=COLOR_ACCENT_HOVER, activeforeground=COLOR_TEXT_WHITE,
             relief="flat", cursor="hand2", command=self.spin_wheel
         )
         self.spin_btn.pack(fill="x", ipady=8, pady=(15, 12))
@@ -917,7 +927,7 @@ class LuckyWheelPanel(tk.Frame):
         )
         self.status_lbl.pack(anchor="w")
 
-        # Prize Card: Highly prominent, fully visible
+        # Prize Card
         self.prize_card = tk.Frame(right_box, bg=COLOR_SURFACE_ALT, padx=15, pady=15, highlightbackground=COLOR_BORDER, highlightthickness=1)
         self.prize_card.pack(fill="x", pady=(15, 10))
 
@@ -925,7 +935,7 @@ class LuckyWheelPanel(tk.Frame):
 
         self.prize_badge = tk.Label(
             self.prize_card, text="Awaiting Spin...", font=(FONT_NAME, 14, "bold"),
-            bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_LIGHT
+            bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_MAIN
         )
         self.prize_badge.pack(pady=(6, 4))
 
@@ -935,7 +945,6 @@ class LuckyWheelPanel(tk.Frame):
         )
         self.promo_code_lbl.pack(pady=(0, 4))
 
-        # Instructions Note
         tk.Label(
             right_box, text="ℹ Discounts apply automatically to eligible bookings at checkout.",
             font=(FONT_NAME, 8), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED
@@ -953,7 +962,7 @@ class LuckyWheelPanel(tk.Frame):
 
             self.canvas.create_arc(
                 cx - radius, cy - radius, cx + radius, cy + radius,
-                start=start, extent=step, fill=color, outline="#334155", width=2
+                start=start, extent=step, fill=color, outline="#FFFFFF", width=2
             )
 
             mid = start + (step / 2)
@@ -962,11 +971,11 @@ class LuckyWheelPanel(tk.Frame):
             ty = cy - (radius * 0.64) * math.sin(rad)
 
             self.canvas.create_text(
-                tx, ty, text=self.OFFERS[i], fill=COLOR_TEXT_LIGHT, font=(FONT_NAME, 8, "bold")
+                tx, ty, text=self.OFFERS[i], fill=COLOR_TEXT_WHITE, font=(FONT_NAME, 8, "bold")
             )
 
         # Center Hub
-        self.canvas.create_oval(cx - 20, cy - 20, cx + 20, cy + 20, fill=COLOR_SURFACE_ALT, outline=COLOR_ACCENT, width=2)
+        self.canvas.create_oval(cx - 20, cy - 20, cx + 20, cy + 20, fill=COLOR_SURFACE, outline=COLOR_ACCENT, width=3)
         self.canvas.create_text(cx, cy, text="✈", fill=COLOR_ACCENT, font=(FONT_NAME, 12, "bold"))
 
         # Top Indicator Arrow
@@ -981,7 +990,7 @@ class LuckyWheelPanel(tk.Frame):
         if self.is_spinning:
             return
         self.is_spinning = True
-        self.spin_btn.config(state="disabled", bg=COLOR_SURFACE_ALT)
+        self.spin_btn.config(state="disabled", bg=COLOR_BORDER)
         self.status_lbl.config(text="Spinning the turbines... Good luck!")
         self.prize_badge.config(text="Spinning in progress...")
         self.promo_code_lbl.config(text="Calculating prize...", fg=COLOR_WARNING)
