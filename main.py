@@ -651,19 +651,56 @@ class FlightBoardPanel(tk.Frame):
 
 
 # ==============================================================================
-# TAB 2: TICKET FARE ESTIMATOR
+# TAB 2: TICKET FARE ESTIMATOR (المكان والوجهة + درجة السفر)
 # ==============================================================================
 class TicketPricingPanel(tk.Frame):
-    """Modern interactive Fare & Category Calculator."""
+    """
+    Modern interactive Fare Estimator featuring:
+      1. Departure / المكان (من أين؟)
+      2. Destination / الوجهة (إلى أين؟)
+      3. Cabin Class (درجة السفر)
+      4. Trip Type (ذهاب فقط / ذهاب وعودة)
+    """
 
-    PRICING = {
-        "Cairo (CAI)": {"eco": 15282, "business": 22300, "first-class": 30000},
-        "Paris (CDG)": {"eco": 18700, "business": 25600, "first-class": 34000},
-        "New York (JFK)": {"eco": 25000, "business": 35000, "first-class": 45000},
-        "London (LHR)": {"eco": 20000, "business": 28000, "first-class": 37000},
-        "Rome (FCO)": {"eco": 17500, "business": 24000, "first-class": 32000},
-        "Riyadh (RUH)": {"eco": 14500, "business": 21000, "first-class": 29000},
-        "Dubai (DXB)": {"eco": 16200, "business": 23800, "first-class": 31500},
+    AIRPORTS = [
+        "Cairo (CAI)",
+        "Alexandria (HBE)",
+        "Dubai (DXB)",
+        "Riyadh (RUH)",
+        "Paris (CDG)",
+        "London (LHR)",
+        "Rome (FCO)",
+        "New York (JFK)"
+    ]
+
+    BASE_FARES = {
+        ("Cairo (CAI)", "Paris (CDG)"): (18700, "4h 35m"),
+        ("Cairo (CAI)", "London (LHR)"): (20000, "5h 15m"),
+        ("Cairo (CAI)", "New York (JFK)"): (28500, "11h 45m"),
+        ("Cairo (CAI)", "Rome (FCO)"): (17500, "3h 40m"),
+        ("Cairo (CAI)", "Dubai (DXB)"): (16200, "3h 30m"),
+        ("Cairo (CAI)", "Riyadh (RUH)"): (14500, "2h 45m"),
+        ("Cairo (CAI)", "Alexandria (HBE)"): (3200, "0h 45m"),
+
+        ("Dubai (DXB)", "London (LHR)"): (24000, "7h 30m"),
+        ("Dubai (DXB)", "Paris (CDG)"): (23500, "7h 10m"),
+        ("Dubai (DXB)", "New York (JFK)"): (36000, "14h 20m"),
+        ("Dubai (DXB)", "Cairo (CAI)"): (16200, "3h 45m"),
+        ("Dubai (DXB)", "Riyadh (RUH)"): (8500, "1h 50m"),
+
+        ("Riyadh (RUH)", "Cairo (CAI)"): (14500, "2h 45m"),
+        ("Riyadh (RUH)", "Dubai (DXB)"): (8500, "1h 50m"),
+        ("Riyadh (RUH)", "London (LHR)"): (23000, "6h 50m"),
+        ("Riyadh (RUH)", "Paris (CDG)"): (22500, "6h 35m"),
+        ("Riyadh (RUH)", "New York (JFK)"): (35000, "13h 40m"),
+
+        ("London (LHR)", "New York (JFK)"): (22000, "8h 05m"),
+        ("London (LHR)", "Paris (CDG)"): (6500, "1h 20m"),
+        ("London (LHR)", "Cairo (CAI)"): (20000, "5h 10m"),
+
+        ("Paris (CDG)", "New York (JFK)"): (23000, "8h 25m"),
+        ("Paris (CDG)", "Cairo (CAI)"): (18700, "4h 30m"),
+        ("Paris (CDG)", "Rome (FCO)"): (5800, "2h 05m"),
     }
 
     def __init__(self, parent, workspace: MainWorkspace):
@@ -673,77 +710,159 @@ class TicketPricingPanel(tk.Frame):
         self._build_ui()
 
     def _build_ui(self):
-        tk.Label(self, text="Ticket Price Inquiry", font=FONT_TITLE_HERO, bg=COLOR_BG, fg=COLOR_TEXT_LIGHT).pack(anchor="w")
-        tk.Label(self, text="Instant estimated fares across destinations and cabin classes.", font=FONT_BODY, bg=COLOR_BG, fg=COLOR_TEXT_MUTED).pack(anchor="w", pady=(2, 20))
+        # Header
+        tk.Label(self, text="Flight Ticket Fare Estimator", font=FONT_TITLE_HERO, bg=COLOR_BG, fg=COLOR_TEXT_LIGHT).pack(anchor="w")
+        tk.Label(self, text="حدد مكان الانطلاق والوجهة المطلوبة لحساب متوسط سعر التذكرة فورياً.", font=FONT_BODY, bg=COLOR_BG, fg=COLOR_TEXT_MUTED).pack(anchor="w", pady=(2, 12))
 
         container = tk.Frame(self, bg=COLOR_BG)
         container.pack(fill="both", expand=True)
 
-        # Left Parameters Card
-        card = tk.Frame(container, bg=COLOR_SURFACE, padx=25, pady=25, highlightbackground=COLOR_BORDER, highlightthickness=1)
-        card.pack(side="left", fill="both", expand=True, padx=(0, 12))
+        # Left Parameters Card (المكان والوجهة والدرجة)
+        card = tk.Frame(container, bg=COLOR_SURFACE, padx=22, pady=18, highlightbackground=COLOR_BORDER, highlightthickness=1)
+        card.pack(side="left", fill="both", expand=True, padx=(0, 10))
 
-        tk.Label(card, text="FLIGHT PARAMETERS", font=(FONT_NAME, 10, "bold"), bg=COLOR_SURFACE, fg=COLOR_ACCENT).pack(anchor="w", pady=(0, 12))
+        tk.Label(card, text="مسار الرحلة والخيارات", font=(FONT_NAME, 10, "bold"), bg=COLOR_SURFACE, fg=COLOR_ACCENT).pack(anchor="w", pady=(0, 8))
 
-        tk.Label(card, text="Select Destination", font=(FONT_NAME, 9, "bold"), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w")
-        self.dest_var = tk.StringVar(value=list(self.PRICING.keys())[0])
-        dest_drop = tk.OptionMenu(card, self.dest_var, *self.PRICING.keys(), command=lambda e: self._calculate())
+        # 1. المكان / نقطة الانطلاق (From)
+        tk.Label(card, text="1. مكان الانطلاق (Departure - من)", font=(FONT_NAME, 9, "bold"), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w")
+        self.origin_var = tk.StringVar(value="Cairo (CAI)")
+        origin_drop = tk.OptionMenu(card, self.origin_var, *self.AIRPORTS, command=lambda e: self._calculate())
+        origin_drop.configure(
+            font=(FONT_NAME, 10), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_LIGHT,
+            activebackground=COLOR_SURFACE, activeforeground=COLOR_ACCENT,
+            relief="flat", highlightthickness=1, highlightbackground=COLOR_BORDER
+        )
+        origin_drop["menu"].config(bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT, font=(FONT_NAME, 10))
+        origin_drop.pack(fill="x", ipady=3, pady=(2, 8))
+
+        # 2. الوجهة / الوصول (To)
+        tk.Label(card, text="2. الوجهة المطلوبة (Destination - إلى)", font=(FONT_NAME, 9, "bold"), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w")
+        self.dest_var = tk.StringVar(value="Paris (CDG)")
+        dest_drop = tk.OptionMenu(card, self.dest_var, *self.AIRPORTS, command=lambda e: self._calculate())
         dest_drop.configure(
-            font=(FONT_NAME, 11), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_LIGHT,
+            font=(FONT_NAME, 10), bg=COLOR_SURFACE_ALT, fg=COLOR_TEXT_LIGHT,
             activebackground=COLOR_SURFACE, activeforeground=COLOR_ACCENT,
             relief="flat", highlightthickness=1, highlightbackground=COLOR_BORDER
         )
         dest_drop["menu"].config(bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT, font=(FONT_NAME, 10))
-        dest_drop.pack(fill="x", ipady=5, pady=(4, 15))
+        dest_drop.pack(fill="x", ipady=3, pady=(2, 8))
 
-        tk.Label(card, text="Cabin Class", font=(FONT_NAME, 9, "bold"), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w", pady=(5, 5))
+        # 3. نوع الرحلة (ذهاب فقط / ذهاب وعودة)
+        tk.Label(card, text="3. نوع التذكرة", font=(FONT_NAME, 9, "bold"), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w")
+        trip_type_frame = tk.Frame(card, bg=COLOR_SURFACE)
+        trip_type_frame.pack(fill="x", pady=(2, 8))
+        self.trip_type = tk.StringVar(value="one_way")
+        tk.Radiobutton(
+            trip_type_frame, text="ذهاب فقط (One Way)", variable=self.trip_type, value="one_way",
+            font=(FONT_NAME, 9), bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT, selectcolor=COLOR_SURFACE_ALT,
+            activebackground=COLOR_SURFACE, activeforeground=COLOR_ACCENT, command=self._calculate
+        ).pack(side="left", padx=(0, 15))
+        tk.Radiobutton(
+            trip_type_frame, text="ذهاب وعودة (Round Trip)", variable=self.trip_type, value="round_trip",
+            font=(FONT_NAME, 9), bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT, selectcolor=COLOR_SURFACE_ALT,
+            activebackground=COLOR_SURFACE, activeforeground=COLOR_ACCENT, command=self._calculate
+        ).pack(side="left")
+
+        # 4. درجة السفر (Class)
+        tk.Label(card, text="4. درجة السفر (Cabin Class)", font=(FONT_NAME, 9, "bold"), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w")
+        class_frame = tk.Frame(card, bg=COLOR_SURFACE)
+        class_frame.pack(fill="x", pady=(2, 0))
         self.class_var = tk.StringVar(value="eco")
-        classes = [("Economy Class", "eco"), ("Business Class", "business"), ("First Class VIP", "first-class")]
+        classes = [("السياحية (Eco)", "eco"), ("رجال الأعمال (Business)", "business"), ("الأولى (First VIP)", "first-class")]
         for title, val in classes:
             rb = tk.Radiobutton(
-                card, text=title, variable=self.class_var, value=val,
-                font=(FONT_NAME, 10), bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT,
+                class_frame, text=title, variable=self.class_var, value=val,
+                font=(FONT_NAME, 9), bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT,
                 selectcolor=COLOR_SURFACE_ALT, activebackground=COLOR_SURFACE,
                 activeforeground=COLOR_ACCENT, command=self._calculate
             )
-            rb.pack(anchor="w", pady=3)
+            rb.pack(anchor="w", pady=1)
 
-        # Right Summary Card
-        self.summary_card = tk.Frame(container, bg=COLOR_SURFACE, padx=25, pady=25, highlightbackground=COLOR_BORDER, highlightthickness=1)
-        self.summary_card.pack(side="right", fill="both", expand=True, padx=(12, 0))
+        # Right Summary Card (تفاصيل التذكرة والسعر)
+        self.summary_card = tk.Frame(container, bg=COLOR_SURFACE, padx=22, pady=18, highlightbackground=COLOR_BORDER, highlightthickness=1)
+        self.summary_card.pack(side="right", fill="both", expand=True, padx=(10, 0))
 
-        tk.Label(self.summary_card, text="ESTIMATED FARE SUMMARY", font=(FONT_NAME, 10, "bold"), bg=COLOR_SURFACE, fg=COLOR_ACCENT).pack(anchor="w")
+        tk.Label(self.summary_card, text="تفاصيل وحساب التذكرة", font=(FONT_NAME, 10, "bold"), bg=COLOR_SURFACE, fg=COLOR_ACCENT).pack(anchor="w")
+
+        # Route Badge
+        self.route_badge = tk.Label(
+            self.summary_card, text="Cairo (CAI) ➔ Paris (CDG)", font=(FONT_NAME, 11, "bold"),
+            bg=COLOR_SURFACE_ALT, fg=COLOR_ACCENT, padx=10, pady=5
+        )
+        self.route_badge.pack(fill="x", pady=(10, 6))
+
+        self.duration_lbl = tk.Label(
+            self.summary_card, text="⏱ مدة الرحلة المتوقعة: 4h 35m مباشر",
+            font=(FONT_NAME, 9), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED
+        )
+        self.duration_lbl.pack(anchor="w", pady=(0, 8))
+
+        tk.Label(self.summary_card, text="السعر المقدر للتذكرة:", font=(FONT_NAME, 9, "bold"), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w")
 
         self.price_display = tk.Label(
-            self.summary_card, text="0 EGP", font=(FONT_NAME, 26, "bold"),
+            self.summary_card, text="0 EGP", font=(FONT_NAME, 24, "bold"),
             bg=COLOR_SURFACE, fg=COLOR_TEXT_LIGHT
         )
-        self.price_display.pack(anchor="w", pady=(18, 2))
+        self.price_display.pack(anchor="w", pady=(2, 2))
 
         self.usd_display = tk.Label(
-            self.summary_card, text="~$0 USD", font=(FONT_NAME, 12),
+            self.summary_card, text="~$0 USD", font=(FONT_NAME, 11),
             bg=COLOR_SURFACE, fg=COLOR_SUCCESS
         )
-        self.usd_display.pack(anchor="w", pady=(0, 20))
+        self.usd_display.pack(anchor="w", pady=(0, 12))
 
         details = [
-            "✔ Includes baggage allowance (2x 23kg)",
-            "✔ In-flight meal and Wi-Fi complimentary",
-            "✔ Flexible date rescheduling permitted"
+            "✔ شاملة وزن الأمتعة (2 حقيبة × 23 كجم)",
+            "✔ وجبة طعام ساخنة وخدمة Wi-Fi أثناء الرحلة",
+            "✔ إمكانية استرداد أو تغيير الموعد بمرونة",
+            "✔ أسعار رسمية شاملة الضرائب والرسوم"
         ]
         for d in details:
-            tk.Label(self.summary_card, text=d, font=(FONT_NAME, 9), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w", pady=2)
+            tk.Label(self.summary_card, text=d, font=(FONT_NAME, 9), bg=COLOR_SURFACE, fg=COLOR_TEXT_MUTED).pack(anchor="w", pady=1)
 
         self._calculate()
 
     def _calculate(self):
+        origin = self.origin_var.get()
         dest = self.dest_var.get()
         cls = self.class_var.get()
-        if dest in self.PRICING and cls in self.PRICING[dest]:
-            price = self.PRICING[dest][cls]
-            usd = price / 50
-            self.price_display.config(text=f"{price:,.0f} EGP")
-            self.usd_display.config(text=f"~${usd:,.0f} USD (approx. exchange)")
+        is_round_trip = (self.trip_type.get() == "round_trip")
+
+        self.route_badge.config(text=f"{origin} ✈ ➔ {dest}")
+
+        if origin == dest:
+            self.duration_lbl.config(text="⚠️ مكان الانطلاق والوجهة متطابقان! اختر وجهتين مختلفتين.")
+            self.price_display.config(text="-- EGP")
+            self.usd_display.config(text="غير متاح")
+            return
+
+        key = (origin, dest)
+        reverse_key = (dest, origin)
+
+        if key in self.BASE_FARES:
+            base_fare, duration = self.BASE_FARES[key]
+        elif reverse_key in self.BASE_FARES:
+            base_fare, duration = self.BASE_FARES[reverse_key]
+        else:
+            base_fare = 19500
+            duration = "5h 30m"
+
+        multiplier = 1.0
+        if cls == "business":
+            multiplier = 1.45
+        elif cls == "first-class":
+            multiplier = 1.95
+
+        trip_mult = 1.85 if is_round_trip else 1.0
+
+        total_price = base_fare * multiplier * trip_mult
+        usd_price = total_price / 50
+
+        type_text = "ذهاب وعودة" if is_round_trip else "ذهاب فقط"
+        self.duration_lbl.config(text=f"⏱ مدة الرحلة التقريبية: {duration} ({type_text})")
+        self.price_display.config(text=f"{total_price:,.0f} EGP")
+        self.usd_display.config(text=f"~${usd_price:,.0f} USD (حسب سعر الصرف التقريبي)")
+
 
 
 # ==============================================================================
