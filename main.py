@@ -145,44 +145,59 @@ class AuthView(tk.Frame):
         self._build_ui()
 
     def _build_ui(self):
-        # Left Visual Banner (Bright Cheerful Aviation Blue)
-        left_banner = tk.Frame(self, bg=COLOR_ACCENT, width=380)
+        # Left Visual Banner (Comfortable, Soft Cloud Sky Theme)
+        left_banner = tk.Frame(self, bg="#E8F2FA", width=380, highlightbackground=COLOR_BORDER, highlightthickness=1)
         left_banner.pack(side="left", fill="y")
         left_banner.pack_propagate(False)
 
-        badge = tk.Frame(left_banner, bg=COLOR_ACCENT_HOVER, padx=12, pady=6)
-        badge.pack(anchor="w", padx=35, pady=(55, 20))
+        content_box = tk.Frame(left_banner, bg="#E8F2FA", padx=35, pady=45)
+        content_box.pack(fill="both", expand=True)
+
+        # Top Category Tag
+        tag_frame = tk.Frame(content_box, bg="#D6E8F7", padx=10, pady=4)
+        tag_frame.pack(anchor="w", pady=(0, 20))
         tk.Label(
-            badge, text="GLOBAL AVIATION PORTAL", font=(FONT_NAME, 9, "bold"),
-            bg=COLOR_ACCENT_HOVER, fg=COLOR_TEXT_WHITE
+            tag_frame, text="✈ AVIATION OPERATIONS", font=(FONT_NAME, 8, "bold"),
+            bg="#D6E8F7", fg=COLOR_ACCENT
         ).pack()
 
+        # Brand Emblem & Title
         tk.Label(
-            left_banner, text="✈ SkyWing", font=(FONT_NAME, 28, "bold"),
-            bg=COLOR_ACCENT, fg=COLOR_TEXT_WHITE
-        ).pack(anchor="w", padx=35)
+            content_box, text="SkyWing", font=(FONT_NAME, 26, "bold"),
+            bg="#E8F2FA", fg=COLOR_TEXT_MAIN
+        ).pack(anchor="w")
 
         tk.Label(
-            left_banner, text="Airlines & Flight Operations", font=(FONT_NAME, 13),
-            bg=COLOR_ACCENT, fg="#E0F2FE"
-        ).pack(anchor="w", padx=35, pady=(2, 25))
+            content_box, text="Airlines Global Suite", font=(FONT_NAME, 12, "bold"),
+            bg="#E8F2FA", fg=COLOR_ACCENT
+        ).pack(anchor="w", pady=(2, 25))
 
-        desc = (
-            "Experience seamless flight tracking,\n"
-            "dynamic ticket fare estimation,\n"
-            "real-time fleet management, and\n"
-            "exclusive promotional rewards."
-        )
-        tk.Label(
-            left_banner, text=desc, font=(FONT_NAME, 11),
-            bg=COLOR_ACCENT, fg="#F0F9FF", justify="left", anchor="w"
-        ).pack(anchor="w", padx=35, pady=(0, 40))
+        # 3 Clean Feature Highlights (Eye-pleasing & comfortable)
+        features = [
+            ("🛫", "Live Flight Tracking", "Real-time board & status updates"),
+            ("🎟", "Smart Fare Estimator", "Multi-city route pricing & classes"),
+            ("🎡", "Daily Rewards Wheel", "Exclusive vouchers & promo codes")
+        ]
 
-        q_frame = tk.Frame(left_banner, bg="#0275B1", padx=20, pady=15, highlightbackground="#38BDF8", highlightthickness=1)
-        q_frame.pack(side="bottom", fill="x", padx=30, pady=35)
+        for icon, title, desc in features:
+            f_frame = tk.Frame(content_box, bg="#FFFFFF", padx=14, pady=10, highlightbackground="#D4E4F2", highlightthickness=1)
+            f_frame.pack(fill="x", pady=6)
+
+            tk.Label(f_frame, text=icon, font=(FONT_NAME, 14), bg="#FFFFFF").pack(side="left", padx=(0, 10))
+
+            text_sub = tk.Frame(f_frame, bg="#FFFFFF")
+            text_sub.pack(side="left", fill="both", expand=True)
+
+            tk.Label(text_sub, text=title, font=(FONT_NAME, 10, "bold"), bg="#FFFFFF", fg=COLOR_TEXT_MAIN).pack(anchor="w")
+            tk.Label(text_sub, text=desc, font=(FONT_NAME, 8), bg="#FFFFFF", fg=COLOR_TEXT_MUTED).pack(anchor="w")
+
+        # Bottom Slogan Banner (Comfortable & elegant)
+        q_frame = tk.Frame(content_box, bg="#DEEDF8", padx=15, pady=12, highlightbackground="#CFE3F3", highlightthickness=1)
+        q_frame.pack(side="bottom", fill="x", pady=(20, 0))
+
         tk.Label(
             q_frame, text="“The sky has no limits, only horizons.”",
-            font=(FONT_NAME, 10, "italic"), bg="#0275B1", fg=COLOR_TEXT_WHITE
+            font=(FONT_NAME, 9, "italic"), bg="#DEEDF8", fg=COLOR_ACCENT, justify="center"
         ).pack()
 
         # Right Form Area (Crisp White Card on Soft Sky Backdrop)
